@@ -1,4 +1,5 @@
 import Image from "next/image";
+import NextLink from "next/link";
 import { Spacer, Text, useTheme } from "@nextui-org/react";
 
 export const Navbar = () => {
@@ -16,10 +17,13 @@ export const Navbar = () => {
       }}
     >
       <Image src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png" width={70} height={70} alt="icono de la app" />
-      <Text color="white" h2>P</Text>
-      <Text color="white" h3>okemon</Text>
-      <Spacer css={{ flex: 1, }} />
-      <Text color="white">Favoritos</Text>
+      <NextLink href="/">
+        <Text color="white" h3>Pokemon</Text>
+      </NextLink>
+      <Spacer css={{ flex: .9, }} />
+      <NextLink href="/favorites">
+        <Text color="white">Favoritos</Text>
+      </NextLink>
     </div>
   );
 };

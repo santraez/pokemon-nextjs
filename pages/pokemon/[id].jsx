@@ -1,10 +1,28 @@
+import { useState } from "react";
 import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
 import { pokeApi } from "../../api";
 import { Layout } from "../../components/layouts";
+import localFavorites from "../../utils/localFavorites";
 
 const PokemonPage = ({ pokemon }) => {
+  const [isInFavorites, setIsInFavorites] = useState(localFavorites.existInFavorites(pokemon.id));
+  const onToggleFavorite = () => {
+    localFavorites.toggleFavorite(pokemon.id);
+    setIsInFavorites(!isInFavorites);
+  };
+
+  /*
+  este console log no encuentra LOcalStorage porqeu se ejecuta en servidor
+  console.log({ existeWindow: typeof window !== 'undefined' })
+
+  useEffect(() => {
+    //este console log si encuentra LOcalStorage porqeu se ejecuta en cliente
+    console.log({ existeWindow: typeof window !== 'undefined' })
+  }, []);
+  */
+
   return (
-    <Layout title='Algun Pokemon'>
+    <Layout title={pokemon.name}>
       <Grid.Container css={{ marginTop: '5px', }} gap={2}>
         <Grid xs={12} sm={4}>
           <Card isHoverable css={{ padding: '30px', }}>
@@ -22,8 +40,12 @@ const PokemonPage = ({ pokemon }) => {
           <Card>
             <Card.Header css={{ display: 'flex', justifyContent: 'space-between', }}>
               <Text h1 transform="capitalize">{pokemon.name}</Text>
-              <Button color="gradient" ghost>
-                Guardar en favoritos
+              <Button
+                onPress={onToggleFavorite}
+                color="gradient"
+                ghost={!isInFavorites}
+              >
+                {isInFavorites ? "En favoritos" : "Guardar en favoritos"}
               </Button>
             </Card.Header>
             <Card.Body>
@@ -63,7 +85,7 @@ const PokemonPage = ({ pokemon }) => {
 };
 
 //primero sucede esto
-export const getStaticPaths = async () => {
+export const getStaticPaths = async (ctx) => {
   const pokemons151 = [...Array(151)].map((_, index) => `${index + 1}`);
   return {
     paths: pokemons151.map((id) => ({
@@ -79,7 +101,7 @@ export const getStaticProps = async (ctx) => {
   const { data } = await pokeApi.get(`/pokemon/${id}`);
   return {
     props: { pokemon: data, },
-  }
-}
+  };
+};
 
 export default PokemonPage;
