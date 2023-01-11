@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
 import confetti from "canvas-confetti";
+import { pokeApi } from "../../api";
 import { Layout } from "../../components/layouts";
 import localFavorites from "../../utils/localFavorites";
 import getPokemonInfo from "../../utils/getPokemonInfo";
 
-const PokemonPage = ({ pokemon }) => {
+const PokemonByNamePage = ({ pokemon }) => {
   const [isInFavorites, setIsInFavorites] = useState(localFavorites.existInFavorites(pokemon.id));
   const onToggleFavorite = () => {
     localFavorites.toggleFavorite(pokemon.id);
@@ -22,17 +23,6 @@ const PokemonPage = ({ pokemon }) => {
       },
     });
   };
-
-  /*
-  este console log no encuentra LOcalStorage porqeu se ejecuta en servidor
-  console.log({ existeWindow: typeof window !== 'undefined' })
-
-  useEffect(() => {
-    //este console log si encuentra LOcalStorage porqeu se ejecuta en cliente
-    console.log({ existeWindow: typeof window !== 'undefined' })
-  }, []);
-  */
-
   return (
     <Layout title={pokemon.name}>
       <Grid.Container css={{ marginTop: '5px', }} gap={2}>
@@ -95,24 +85,22 @@ const PokemonPage = ({ pokemon }) => {
     </Layout>
   );
 };
-
-//primero sucede esto
 export const getStaticPaths = async (ctx) => {
-  const pokemons151 = [...Array(151)].map((_, index) => `${index + 1}`);
+  const { data } = await pokeApi.get(`/pokemon?limit=151`);
+  const pokeNames = data.results.map(pokemon => pokemon.name);
+  console.log("🚀 ~ file: [name].jsx:90 ~ getStaticPaths ~ pokeNames", pokeNames)
   return {
-    paths: pokemons151.map((id) => ({
-      params: { id: id, },
+    paths: pokeNames.map(name => ({
+      params: { name: name, },
     })),
     fallback: false,
   };
 };
-
-//luego pasa a aqui
 export const getStaticProps = async (ctx) => {
-  const { id } = ctx.params;
+  const { name } = ctx.params;
   return {
-    props: { pokemon: await getPokemonInfo(id), },
+    props: { pokemon: await getPokemonInfo(name), },
   };
 };
 
-export default PokemonPage;
+export default PokemonByNamePage;

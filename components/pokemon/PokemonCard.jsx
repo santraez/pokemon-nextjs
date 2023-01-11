@@ -4,7 +4,7 @@ import { Card, Grid, Row, Text, } from "@nextui-org/react";
 export const PokemonCard = ({ pokemon }) => {
   const router = useRouter();
   const onClick = () => {
-    router.push(`/pokemon/${pokemon.id}`);
+    router.push(`/name/${pokemon.name}`);
   };
   return (
     <Grid xs={6} sm={3} md={2} xl={1}>
