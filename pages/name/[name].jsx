@@ -40,7 +40,7 @@ const PokemonByNamePage = ({ pokemon }) => {
         </Grid>
         <Grid xs={12} sm={8}>
           <Card>
-            <Card.Header id='button-favorite__container' css={{ display: 'flex', justifyContent: 'space-between', }}>
+            <Card.Header className='button-favorite__container' css={{ display: 'flex', justifyContent: 'space-between', }}>
               <Text h1 transform="capitalize">{pokemon.name}</Text>
               <Button
                 onPress={onToggleFavorite}
@@ -88,18 +88,27 @@ const PokemonByNamePage = ({ pokemon }) => {
 export const getStaticPaths = async (ctx) => {
   const { data } = await pokeApi.get(`/pokemon?limit=151`);
   const pokeNames = data.results.map(pokemon => pokemon.name);
-  console.log("🚀 ~ file: [name].jsx:90 ~ getStaticPaths ~ pokeNames", pokeNames)
   return {
     paths: pokeNames.map(name => ({
       params: { name: name, },
     })),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 export const getStaticProps = async (ctx) => {
   const { name } = ctx.params;
+  const pokemon = await getPokemonInfo(name);
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  };
   return {
-    props: { pokemon: await getPokemonInfo(name), },
+    props: { pokemon: pokemon, },
+    revalidate: 86400, //24 horas
   };
 };
 

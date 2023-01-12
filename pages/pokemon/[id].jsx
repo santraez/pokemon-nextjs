@@ -50,7 +50,7 @@ const PokemonPage = ({ pokemon }) => {
         </Grid>
         <Grid xs={12} sm={8}>
           <Card>
-            <Card.Header css={{ display: 'flex', justifyContent: 'space-between', }}>
+            <Card.Header className='button-favorite__container' css={{ display: 'flex', justifyContent: 'space-between', }}>
               <Text h1 transform="capitalize">{pokemon.name}</Text>
               <Button
                 onPress={onToggleFavorite}
@@ -103,15 +103,26 @@ export const getStaticPaths = async (ctx) => {
     paths: pokemons151.map((id) => ({
       params: { id: id, },
     })),
-    fallback: false,
+    //fallback: false,
+    fallback: 'blocking',
   };
 };
 
 //luego pasa a aqui
 export const getStaticProps = async (ctx) => {
   const { id } = ctx.params;
+  const pokemon = await getPokemonInfo(id)
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  };
   return {
-    props: { pokemon: await getPokemonInfo(id), },
+    props: { pokemon: pokemon, },
+    revalidate: 86400, //24 horas
   };
 };
 

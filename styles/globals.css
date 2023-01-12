@@ -107,7 +107,7 @@ a {
 }
 
 @media (max-width: 500px) {
-  #button-favorite__container {
+  .button-favorite__container {
     flex-direction: column;
   }
 }
