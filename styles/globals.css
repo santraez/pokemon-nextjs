@@ -105,3 +105,9 @@ a {
     color-scheme: dark;
   }
 }
+
+@media (max-width: 500px) {
+  #button-favorite__container {
+    flex-direction: column;
+  }
+}

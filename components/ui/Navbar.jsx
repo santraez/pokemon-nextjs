@@ -16,13 +16,13 @@ export const Navbar = () => {
         backgroundColor: theme.colors.gray300.value,
       }}
     >
-      <Image src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png" width={70} height={70} alt="icono de la app" />
+      <Image src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/52.png" width={70} height={70} alt="icono de la app" />
       <NextLink href="/">
-        <Text color="white" h3>Pokemon</Text>
+        <Text css={{ margin: '0' }} color="white" h3>Pokemon</Text>
       </NextLink>
-      <Spacer css={{ flex: .9, }} />
+      <Spacer css={{ flex: .7, }} />
       <NextLink href="/favorites">
-        <Text color="white">Favoritos</Text>
+        <Text css={{ textTransform: 'uppercase', marginTop: '7px',fontWeight: '700' }} color="white">favorites</Text>
       </NextLink>
     </div>
   );
